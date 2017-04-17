@@ -21,62 +21,69 @@ namespace Client
         Stream fileStream = null;
         byte[] fileBuffer;
         byte[] sizeAndName;
+        string fileName;
+        string size;
 
         public MainForm()
         {
             InitializeComponent();
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            
+            waitGif.Hide();
 
+            textBox1.AppendText("Choose file to send");
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
            
-
-
-
             new Thread(() =>
             {
-                Invoke(new Action(() =>
-                {
-                    sendBtn.Enabled = false;
-                    loadFile.Enabled = false;
-                }));
-                serverStream.Write(sizeAndName, 0, sizeAndName.Length);
-                serverStream.Flush();
-                Thread.Sleep(500);
-                fileStream.Read(fileBuffer, 0, fileBuffer.Length);
-                serverStream.Write(fileBuffer, 0, fileBuffer.Length);
-                serverStream.Flush();
-                JavaScript.SetTimeout(() =>
+
+                try
                 {
                     Invoke(new Action(() =>
                     {
-                        sendBtn.Enabled = true;
-                        loadFile.Enabled = true;
+                        sendBtn.Enabled = false;
+                        loadFile.Enabled = false;
+                        waitGif.Show();
+
+                        textBox1.AppendText(Environment.NewLine + "Sending file: \"" + fileName + "\" size: " + size + " bytes");
                     }));
-                }, 200);
+                    serverStream.Write(sizeAndName, 0, sizeAndName.Length);
+                    serverStream.Flush();
+                    Thread.Sleep(500);
+                    fileStream.Read(fileBuffer, 0, fileBuffer.Length);
+                    serverStream.Write(fileBuffer, 0, fileBuffer.Length);
+                    serverStream.Flush();
+                    Thread.Sleep(500);
+
+                    Invoke(new Action(() =>
+                    {
+
+                        byte[] inStream = new byte[1024];
+
+                        if (serverStream.Read(inStream, 0, inStream.Length) == 4)
+                        {
+                            textBox1.AppendText(Environment.NewLine + "File sended successfully");
+                            sendBtn.Enabled = true;
+                            loadFile.Enabled = true;
+                            waitGif.Hide();
+                        }
+
+                    }));
+                }
+                catch(Exception ez)
+                {
+                    MessageBox.Show("Connection to the server has been lost");
+                    Application.Restart();
+                    Application.ExitThread();
+                }
+
+
 
             }).Start();
 
-     
-            //try
-            //{
-
-            //byte[] inStream = new byte[1024];
-            //label1.Text = Convert.ToString((int)clientSocket.ReceiveBufferSize);
-            //serverStream.Read(inStream, 0, inStream.Length);
-            //string returndata = System.Text.Encoding.ASCII.GetString(inStream);
-            //msg("Data from Server : " + returndata);
-            //}
-            //catch (Exception ex)
-            //{
-            //MessageBox.Show("Connection to the server has been lost");
-            //Application.Restart();
-            //Application.ExitThread();
-            //}
         }
 
         public void msg(string mesg)
@@ -86,21 +93,8 @@ namespace Client
 
         private void Form1_Load_1(object sender, EventArgs e)
         {
-
-            //  Prompt.ShowDialog(clientSocket);
             new ConnectInputForm().ShowDialog();
             serverStream = clientSocket.GetStream();
-
-            // try
-            // {
-            //clientSocket.Connect(new IPEndPoint(IPAddress.Parse("147.0.0.1"), 8888));
-            // }
-            // catch (Exception ex)
-            // {
-            //     Console.WriteLine(ex.Message);
-            // }
-            //// clientSocket.Connect("127.0.0.1", 8888);
-            // msg("Client connected to the server");
         }
 
         private void loadFile_Click(object sender, EventArgs e)
@@ -123,8 +117,8 @@ namespace Client
                        
                             pathBox.Text = openFileDialog1.FileName;     
                             fileBuffer = new byte[fileStream.Length];
-                            string size = Convert.ToString(fileStream.Length);
-                            string fileName = openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf('\\') + 1);
+                            size = Convert.ToString(fileStream.Length);
+                            fileName = openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf('\\') + 1);
                             sizeAndName = System.Text.Encoding.ASCII.GetBytes(size + "|" + fileName + "$");
 
                     }

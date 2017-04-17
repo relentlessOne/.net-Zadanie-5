@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.sendBtn = new System.Windows.Forms.Button();
@@ -36,6 +37,8 @@
             this.loadFile = new System.Windows.Forms.Button();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pathBox = new System.Windows.Forms.TextBox();
+            this.waitGif = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.waitGif)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -93,11 +96,21 @@
             this.pathBox.Size = new System.Drawing.Size(259, 20);
             this.pathBox.TabIndex = 4;
             // 
+            // waitGif
+            // 
+            this.waitGif.Image = ((System.Drawing.Image)(resources.GetObject("waitGif.Image")));
+            this.waitGif.Location = new System.Drawing.Point(205, 227);
+            this.waitGif.Name = "waitGif";
+            this.waitGif.Size = new System.Drawing.Size(39, 41);
+            this.waitGif.TabIndex = 5;
+            this.waitGif.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 280);
+            this.Controls.Add(this.waitGif);
             this.Controls.Add(this.pathBox);
             this.Controls.Add(this.loadFile);
             this.Controls.Add(this.sendBtn);
@@ -106,6 +119,7 @@
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load_1);
+            ((System.ComponentModel.ISupportInitialize)(this.waitGif)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -120,6 +134,7 @@
         private System.Windows.Forms.Button loadFile;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.TextBox pathBox;
+        private System.Windows.Forms.PictureBox waitGif;
     }
 }
 
