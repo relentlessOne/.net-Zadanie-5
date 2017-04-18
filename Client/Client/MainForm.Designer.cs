@@ -56,6 +56,7 @@
             this.textBox1.MaximumSize = new System.Drawing.Size(1000, 1000);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(260, 126);
             this.textBox1.TabIndex = 1;
             // 
@@ -93,6 +94,7 @@
             // 
             this.pathBox.Location = new System.Drawing.Point(12, 42);
             this.pathBox.Name = "pathBox";
+            this.pathBox.ReadOnly = true;
             this.pathBox.Size = new System.Drawing.Size(259, 20);
             this.pathBox.TabIndex = 4;
             // 
