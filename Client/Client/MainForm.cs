@@ -36,53 +36,61 @@ namespace Client
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-           
-            new Thread(() =>
+
+            if(fileStream == null)
             {
-
-                try
+                MessageBox.Show("Choose file to send");
+            } else
+            {
+                new Thread(() =>
                 {
-                    Invoke(new Action(() =>
+
+                    try
                     {
-                        sendBtn.Enabled = false;
-                        loadFile.Enabled = false;
-                        waitGif.Show();
-
-                        textBox1.AppendText(Environment.NewLine + "Sending file: \"" + fileName + "\" size: " + size + " bytes");
-                    }));
-                    serverStream.Write(sizeAndName, 0, sizeAndName.Length);
-                    serverStream.Flush();
-                    Thread.Sleep(500);
-                    fileStream.Read(fileBuffer, 0, fileBuffer.Length);
-                    serverStream.Write(fileBuffer, 0, fileBuffer.Length);
-                    serverStream.Flush();
-                    Thread.Sleep(500);
-
-                    Invoke(new Action(() =>
-                    {
-
-                        byte[] inStream = new byte[1024];
-
-                        if (serverStream.Read(inStream, 0, inStream.Length) == 4)
+                        Invoke(new Action(() =>
                         {
-                            textBox1.AppendText(Environment.NewLine + "File sended successfully");
-                            sendBtn.Enabled = true;
-                            loadFile.Enabled = true;
-                            waitGif.Hide();
-                        }
+                            sendBtn.Enabled = false;
+                            loadFile.Enabled = false;
+                            waitGif.Show();
 
-                    }));
-                }
-                catch(Exception ez)
-                {
-                    MessageBox.Show("Connection to the server has been lost");
-                    Application.Restart();
-                    Application.ExitThread();
-                }
+                            textBox1.AppendText(Environment.NewLine + "Sending file: \"" + fileName + "\" size: " + size + " bytes");
+                        }));
+                        serverStream.Write(sizeAndName, 0, sizeAndName.Length);
+                        serverStream.Flush();
+                        Thread.Sleep(500);
+                        fileStream.Read(fileBuffer, 0, fileBuffer.Length);
+                        serverStream.Write(fileBuffer, 0, fileBuffer.Length);
+                        serverStream.Flush();
+                        Thread.Sleep(500);
+
+                        Invoke(new Action(() =>
+                        {
+
+                            byte[] inStream = new byte[1024];
+
+                            if (serverStream.Read(inStream, 0, inStream.Length) == 4)
+                            {
+                                textBox1.AppendText(Environment.NewLine + "File sended successfully");
+                                sendBtn.Enabled = true;
+                                loadFile.Enabled = true;
+                                waitGif.Hide();
+                            }
+
+                        }));
+                    }
+                    catch (Exception ez)
+                    {
+                        MessageBox.Show("Connection to the server has been lost");
+                        Application.Restart();
+                        Application.ExitThread();
+                    }
 
 
 
-            }).Start();
+                }).Start();
+            }
+           
+           
 
         }
 
